@@ -1,5 +1,6 @@
 import { AnyGuildChannelWithoutThreads, AnyTextChannel, ChannelTypes, DeletedPrivateChannel, Guild, Message, PossiblyUncachedMessage, PossiblyUncachedThread, PrivateChannel, TextableChannel, Uncached } from 'oceanic.js';
 import { Collector, CollectorOptions } from './Collector';
+import { decrementMaxEventListeners, incrementMaxEventListeners } from '../utils/adjustMaxEventListeners';
 
 export interface MessageCollectorOptions extends CollectorOptions<Message> {
     channel: AnyTextChannel;
@@ -25,6 +26,8 @@ export class MessageCollector extends Collector<Message> {
         this.client.on('threadDelete', this._handleThreadDelete);
         this.client.on('guildDelete', this._handleGuildDelete);
 
+        incrementMaxEventListeners(this.client);
+
         this.once('end', () => {
             this.client.removeListener('messageCreate', this.handleCollect);
             this.client.removeListener('messageDelete', this.handleDispose);
@@ -32,6 +35,8 @@ export class MessageCollector extends Collector<Message> {
             this.client.removeListener('channelDelete', this._handleChannelDelete);
             this.client.removeListener('threadDelete', this._handleThreadDelete);
             this.client.removeListener('guildDelete', this._handleGuildDelete);
+
+            decrementMaxEventListeners(this.client);
         });
     }
 
