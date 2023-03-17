@@ -19,15 +19,16 @@ export function messageCollector(client) {
         console.log(`Started MessageCollector!`);
 
         collector.on('collect', async (collected) => console.log(`Collected Message: ${collected.id}`));
+        collector.on('disposed', async (collected) => console.log(`Disposed Message: ${collected.id}`));
 
         collector.on('end', async (collection, reason) => {
-            console.log('MessageCollector ended!');
+            console.log('MessageCollector ended!', collection);
 
             await client.rest.channels.createMessage(message.channelID, {
                 content: reason || 'No reason',
                 embeds: [
                     {
-                        description: collection.toArray().join('\n')
+                        description: collection.toJSON().join('\n')
                     }
                 ]
             });

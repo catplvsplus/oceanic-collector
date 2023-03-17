@@ -4,6 +4,7 @@ import { decrementMaxEventListeners, incrementMaxEventListeners } from '../utils
 import { Collection } from '@discordjs/collection';
 
 export interface CollectedMessageReaction {
+    id: string;
     emoji: PartialEmoji;
     messageID: string;
     message: PossiblyUncachedMessage;
@@ -44,7 +45,8 @@ export class ReactionCollector extends Collector<CollectedMessageReaction, React
         this.message = options.message;
 
         this._handleEmpty = this._handleEmpty.bind(this);
-        this._handleMessafeDeleteBulk = this._handleMessafeDeleteBulk.bind(this);
+        this._handleMessageDelete = this._handleMessageDelete.bind(this);
+        this._handleMessageDeleteBulk = this._handleMessageDeleteBulk.bind(this);
         this._handleChannelDelete = this._handleChannelDelete.bind(this);
         this._handleThreadDelete = this._handleThreadDelete.bind(this);
         this._handleGuildDelete = this._handleGuildDelete.bind(this);
@@ -55,7 +57,7 @@ export class ReactionCollector extends Collector<CollectedMessageReaction, React
         this.client.on('messageReactionRemove', this.handleDispose);
         this.client.on('messageReactionRemoveAll', this._handleEmpty);
         this.client.on('messageDelete', this._handleMessageDelete);
-        this.client.on('messageDeleteBulk', this._handleMessafeDeleteBulk);
+        this.client.on('messageDeleteBulk', this._handleMessageDeleteBulk);
         this.client.on('channelDelete', this._handleChannelDelete);
         this.client.on('threadDelete', this._handleThreadDelete);
         this.client.on('guildDelete', this._handleGuildDelete);
@@ -65,7 +67,7 @@ export class ReactionCollector extends Collector<CollectedMessageReaction, React
             this.client.removeListener('messageReactionRemove', this.handleDispose);
             this.client.removeListener('messageReactionRemoveAll', this._handleEmpty);
             this.client.removeListener('messageDelete', this._handleMessageDelete);
-            this.client.removeListener('messageDeleteBulk', this._handleMessafeDeleteBulk);
+            this.client.removeListener('messageDeleteBulk', this._handleMessageDeleteBulk);
             this.client.removeListener('channelDelete', this._handleChannelDelete);
             this.client.removeListener('threadDelete', this._handleThreadDelete);
             this.client.removeListener('guildDelete', this._handleGuildDelete);
@@ -83,7 +85,7 @@ export class ReactionCollector extends Collector<CollectedMessageReaction, React
         if (message.id === this.message.id) this.stop('messageDelete');
     }
 
-    protected async _handleMessafeDeleteBulk(messages: PossiblyUncachedMessage[]): Promise<void> {
+    protected async _handleMessageDeleteBulk(messages: PossiblyUncachedMessage[]): Promise<void> {
         const msg = messages.find(m => m.id === this.message.id);
         if (msg) this._handleMessageDelete(msg);
     }
@@ -135,6 +137,7 @@ export class ReactionCollector extends Collector<CollectedMessageReaction, React
 
     public parseReaction(message: PossiblyUncachedMessage, reactor: Uncached|User|Member, emoji: PartialEmoji): CollectedMessageReaction {
         return {
+            id: ReactionCollector.getEmojiID(emoji),
             emoji,
             messageID: message.id,
             message,
