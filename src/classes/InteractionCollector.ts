@@ -3,19 +3,19 @@ import { Collector, CollectorEvents, CollectorOptions } from './Collector';
 import { decrementMaxEventListeners, incrementMaxEventListeners } from '../utils/adjustMaxEventListeners';
 import { Collection } from '@discordjs/collection';
 
-export interface InteractionCollectorOptions<T extends AnyInteractionGateway = AnyInteractionGateway> extends CollectorOptions<T> {
+export interface InteractionCollectorOptions extends CollectorOptions<AnyInteractionGateway> {
     message?: Message;
     channel?: AnyTextChannel;
     guild?: Guild|Uncached;
-    interactionType?: T['type'];
+    interactionType?: InteractionTypes;
     maxUsers?: number;
 }
 
-export interface InteractionCollectorEvents<T extends AnyInteractionGateway = AnyInteractionGateway> extends CollectorEvents<T> {
-    userCreate: [user: User, interaction: T];
+export interface InteractionCollectorEvents extends CollectorEvents<AnyInteractionGateway> {
+    userCreate: [user: User, interaction: AnyInteractionGateway];
 }
 
-export class InteractionCollector<T extends AnyInteractionGateway = AnyInteractionGateway> extends Collector<T, InteractionCollectorEvents<T>> {
+export class InteractionCollector extends Collector<AnyInteractionGateway, InteractionCollectorEvents> {
     readonly message: Message|null = null;
     readonly channel: AnyTextChannel|null = null;
     readonly guild: Guild|Uncached|null = null;
@@ -30,7 +30,7 @@ export class InteractionCollector<T extends AnyInteractionGateway = AnyInteracti
         return super.endReason;
     }
 
-    constructor(readonly options: InteractionCollectorOptions<T>) {
+    constructor(readonly options: InteractionCollectorOptions) {
         super(options);
 
         this.message = options.message ?? null;
