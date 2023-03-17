@@ -6,6 +6,8 @@ export async function awaitMessage(options: MessageCollectorOptions & { max?: 1;
 export async function awaitMessage(options: MessageCollectorOptions & { max?: number; }): Promise<Collection<string, Message>>;
 export async function awaitMessage(options: MessageCollectorOptions): Promise<undefined|Message|Collection<string, Message>> {
     return new Promise((res, rej) => {
+        if (options.max === undefined) options.max = 1;
+
         const collector = new MessageCollector(options);
 
         collector.once('end', () => {

@@ -5,6 +5,8 @@ export async function awaitReaction(options: ReactionCollectorOptions & { max?: 
 export async function awaitReaction(options: ReactionCollectorOptions & { max?: number; }): Promise<Collection<string, CollectedMessageReaction>>;
 export async function awaitReaction(options: ReactionCollectorOptions): Promise<undefined|CollectedMessageReaction|Collection<string, CollectedMessageReaction>> {
     return new Promise((res, rej) => {
+        if (options.max === undefined) options.max = 1;
+
         const collector = new ReactionCollector(options);
 
         collector.once('end', () => {
