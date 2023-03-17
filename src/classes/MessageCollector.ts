@@ -47,7 +47,9 @@ export class MessageCollector extends Collector<Message> {
     }
 
     protected async _handleChannelDelete(channel: AnyGuildChannelWithoutThreads|PrivateChannel|DeletedPrivateChannel): Promise<void> {
-        if (channel.id === this.channel.id) this.stop('channelDelete');
+        if (channel.id === this.channel.id || this.channel.type === ChannelTypes.PUBLIC_THREAD && this.channel.parentID === channel.id) {
+            this.stop('channelDelete');
+        }
     }
 
     protected async _handleThreadDelete(thread: PossiblyUncachedThread): Promise<void> {

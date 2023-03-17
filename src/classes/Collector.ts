@@ -157,6 +157,12 @@ export abstract class Collector<Collected, Events extends CollectorEvents<Collec
         this._idleTimeout = setTimeout(() => this.stop('idle'), idle ?? this.idle).unref();
     }
 
+    public empty(): void {
+        this.collection.clear();
+        this.received = 0;
+        this.checkEnd();
+    }
+
     public toArray(): Collected[] {
         return this.collection.toJSON();
     }

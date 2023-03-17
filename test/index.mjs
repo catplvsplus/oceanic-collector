@@ -2,8 +2,7 @@ import { Client } from 'oceanic.js';
 import 'dotenv/config';
 import { messageCollector } from './message.mjs';
 import { reactionCollector } from './reaction.mjs';
-
-// @ts-check
+import { interactionCollector } from './interaction.mjs';
 
 const client = new Client({
     auth: `Bot ${process.env.TOKEN}`,
@@ -14,5 +13,6 @@ const client = new Client({
 
 messageCollector(client);
 reactionCollector(client);
+interactionCollector(client);
 
 await client.connect();

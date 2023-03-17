@@ -9,7 +9,7 @@ export function reactionCollector(client) {
     client.on('messageCreate', async message => {
         if (message.content !== 'rc') return;
 
-        const reply = await client.rest.channels.createMessage(message.channelID, {
+        const reply = await message.channel.createMessage({
             content: 'Reaction collector',
             messageReference: {
                 failIfNotExists: true,

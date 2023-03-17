@@ -76,9 +76,7 @@ export class ReactionCollector extends Collector<CollectedMessageReaction, React
     }
 
     protected async _handleEmpty(): Promise<void> {
-        this.collection.clear();
-        this.reactors.clear();
-        this.checkEnd();
+        this.empty();
     }
 
     protected async _handleMessageDelete(message: PossiblyUncachedMessage): Promise<void> {
@@ -133,6 +131,11 @@ export class ReactionCollector extends Collector<CollectedMessageReaction, React
         }
 
         return message.id === this.message.id ? [ReactionCollector.getEmojiID(emoji), this.parseReaction(message, reactor, emoji)] : null;
+    }
+
+    public empty(): void {
+        this.reactors.clear();
+        super.empty();
     }
 
     public parseReaction(message: PossiblyUncachedMessage, reactor: Uncached|User|Member, emoji: PartialEmoji): CollectedMessageReaction {
