@@ -2,9 +2,9 @@ import { AnyInteractionGateway } from 'oceanic.js';
 import { InteractionCollector, InteractionCollectorOptions } from '../classes/InteractionCollector';
 import { Collection } from '@discordjs/collection';
 
-export async function awaitMessage<T extends AnyInteractionGateway = AnyInteractionGateway>(options: InteractionCollectorOptions & { max?: 1; }): Promise<undefined|T>;
-export async function awaitMessage<T extends AnyInteractionGateway = AnyInteractionGateway>(options: InteractionCollectorOptions & { max?: number; }): Promise<Collection<string, T>>;
-export async function awaitMessage<T extends AnyInteractionGateway = AnyInteractionGateway>(options: InteractionCollectorOptions): Promise<undefined|T|Collection<string, T>> {
+export async function awaitInteraction<T extends AnyInteractionGateway = AnyInteractionGateway>(options: InteractionCollectorOptions & { max?: 1; }): Promise<undefined|T>;
+export async function awaitInteraction<T extends AnyInteractionGateway = AnyInteractionGateway>(options: InteractionCollectorOptions & { max?: number; }): Promise<Collection<string, T>>;
+export async function awaitInteraction<T extends AnyInteractionGateway = AnyInteractionGateway>(options: InteractionCollectorOptions): Promise<undefined|T|Collection<string, T>> {
     return new Promise((res, rej) => {
         const collector = new InteractionCollector(options);
 
