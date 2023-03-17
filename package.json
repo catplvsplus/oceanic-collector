@@ -2,6 +2,7 @@
   "name": "oceanic-collector",
   "description": "A collection of Oceanic.js collectors",
   "version": "1.0.1",
+  "license": "GPL-3.0",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
