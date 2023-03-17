@@ -1,8 +1,13 @@
+import { Client } from 'oceanic.js';
 import { MessageCollector } from '../dist/index.mjs';
 
+/**
+ * 
+ * @param {Client} client 
+ */
 export function messageCollector(client) {
     client.on('messageCreate', async message => {
-        if (message.content !== 'collect') return;
+        if (message.content !== 'mc') return;
 
         const collector = new MessageCollector({
             channel: message.channel,

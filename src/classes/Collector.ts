@@ -1,4 +1,5 @@
-import { Client, Collection, TypedEmitter } from 'oceanic.js';
+import { Client, TypedEmitter } from 'oceanic.js';
+import { Collection } from '@discordjs/collection';
 
 export interface CollectorOptions<Collected> {
     max?: number;
@@ -20,7 +21,7 @@ export interface CollectorEvents<Collected> {
     end: [collection: Collection<string, Collected>, reason: string|null];
 }
 
-export abstract class Collector<Collected> extends TypedEmitter<CollectorEvents<Collected>> {
+export abstract class Collector<Collected, Events extends CollectorEvents<Collected> = CollectorEvents<Collected>> extends TypedEmitter<Events> {
     private _timeout: NodeJS.Timeout|null = null;
     private _idleTimeout: NodeJS.Timeout|null = null;
     private _endReason: string|null = null;
@@ -84,32 +85,32 @@ export abstract class Collector<Collected> extends TypedEmitter<CollectorEvents<
         if (this.idle) this._idleTimeout = setTimeout(() => this.stop('idle'), this.idle).unref();
     }
 
-    public async handleCollect(collected: any): Promise<void> {
-        const collectedId = await this._collect(collected);
-        if (!collectedId) return;
+    public async handleCollect(...args: any[]): Promise<void> {
+        const [collectedID, collected] = await this._collect(...args) || [];
+        if (!collected || !collectedID) return;
 
         if (!await this.filter(collected)) {
             this.emit('ignore', collected);
             return;
         }
 
-        this.collection.set(collectedId, collected);
+        this.collection.set(collectedID, collected);
         this.received++;
 
         this.emit('collect', collected);
         this.lastCollectedTimestamp = Date.now();
 
-        if (this._idleTimeout) this.resetIdle();
+        if (this._idleTimeout) this.resetIDle();
         this.checkEnd();
     }
 
-    public async handleDispose(disposed: any): Promise<void> {
-        if (this.dispose !== false) return;
+    public async handleDispose(...args: any[]): Promise<void> {
+        if (this.dispose === false) return;
 
-        const disposedId = await this._dispose(disposed);
-        if (!disposedId || !this.collection.has(disposedId)) return;
+        const [disposedID, disposed] = await this._dispose(...args) || [];
+        if (!disposedID || !disposed || !this.collection.has(disposedID)) return;
 
-        this.collection.delete(disposedId);
+        this.collection.delete(disposedID);
         this.emit('dispose', disposed);
         this.checkEnd();
     }
@@ -146,10 +147,10 @@ export abstract class Collector<Collected> extends TypedEmitter<CollectorEvents<
             this._timeout = setTimeout(() => this.stop('time'), options.time ?? this.time).unref();
         }
 
-        if (this._idleTimeout) this.resetIdle(options.idle);
+        if (this._idleTimeout) this.resetIDle(options.idle);
     }
 
-    public resetIdle(idle?: number): void {
+    public resetIDle(idle?: number): void {
         if (!this._idleTimeout) return;
 
         clearTimeout(this._idleTimeout);
@@ -157,9 +158,9 @@ export abstract class Collector<Collected> extends TypedEmitter<CollectorEvents<
     }
 
     public toArray(): Collected[] {
-        return this.collection.toArray();
+        return this.collection.toJSON();
     }
 
-    protected abstract _collect(collected: Collected): Promise<string|null>;
-    protected abstract _dispose(collected: Collected): Promise<string|null>;
+    protected abstract _collect(...args: any[]): Promise<[string, any]|null>;
+    protected abstract _dispose(...args: any[]): Promise<[string, any]|null>;
 }

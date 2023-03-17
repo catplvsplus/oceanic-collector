@@ -1,6 +1,6 @@
 {
-  "name": "oceanic-bucket",
-  "description": "A bucket of Oceanic.js collectors",
+  "name": "oceanic-collector",
+  "description": "A collection of Oceanic.js collectors",
   "version": "1.0.0",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
@@ -25,5 +25,8 @@
   },
   "peerDependencies": {
     "oceanic.js": "^1.5.1"
+  },
+  "dependencies": {
+    "@discordjs/collection": "^1.4.0"
   }
 }

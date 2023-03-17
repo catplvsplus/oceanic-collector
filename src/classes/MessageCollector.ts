@@ -19,14 +19,14 @@ export class MessageCollector extends Collector<Message> {
         this._handleThreadDelete = this._handleThreadDelete.bind(this);
         this._handleGuildDelete = this._handleGuildDelete.bind(this);
 
+        incrementMaxEventListeners(this.client);
+
         this.client.on('messageCreate', this.handleCollect);
         this.client.on('messageDelete', this.handleDispose);
         this.client.on('messageDeleteBulk', this._handleMessageDeleteBulk);
         this.client.on('channelDelete', this._handleChannelDelete);
         this.client.on('threadDelete', this._handleThreadDelete);
         this.client.on('guildDelete', this._handleGuildDelete);
-
-        incrementMaxEventListeners(this.client);
 
         this.once('end', () => {
             this.client.removeListener('messageCreate', this.handleCollect);
@@ -58,11 +58,11 @@ export class MessageCollector extends Collector<Message> {
         if (!(this.channel.type === ChannelTypes.DM || this.channel.type === ChannelTypes.GROUP_DM) && guild.id === this.channel.guildID) this.stop('guildDelete');
     }
 
-    protected async _collect(collected: Message): Promise<string | null> {
-        return collected.channelID === this.channel.id ? collected.id : null;
+    protected async _collect(message: Message): Promise<[string, Message] | null> {
+        return message.channelID === this.channel.id ? [message.id, message] : null;
     }
 
-    protected async _dispose(collected: PossiblyUncachedMessage): Promise<string | null> {
-        return collected.channelID === this.channel.id ? collected.id : null;
+    protected async _dispose(message: PossiblyUncachedMessage): Promise<[string, PossiblyUncachedMessage] | null> {
+        return message.channelID === this.channel.id ? [message.id, message] : null;
     }
 }
