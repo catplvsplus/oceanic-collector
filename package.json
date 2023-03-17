@@ -12,6 +12,10 @@
       "types": "./dist/index.d.ts"
     }
   },
+  "repository": {
+    "url": "https://github.com/NotGhex/oceanic-collector",
+    "type": "git"
+  },
   "files": [
     "dist",
     "LICENSE"
