@@ -1,6 +1,11 @@
 # Oceanic Collector
 A collection of oceanic collectors
 
+- [Collector Usage](#collector-usage)
+- [Awaiter Usage](#awaiter-usage)
+
+> See also [eris-collectors](https://www.npmjs.com/package/eris-collectors)
+
 ```
 npm i oceanic-collector
 yarn add oceanic-collector
