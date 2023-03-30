@@ -100,7 +100,7 @@ export abstract class Collector<Collected, Events extends CollectorEvents<Collec
         this.emit('collect', collected);
         this.lastCollectedTimestamp = Date.now();
 
-        if (this._idleTimeout) this.resetIDle();
+        if (this._idleTimeout) this.resetIdle();
         this.checkEnd();
     }
 
@@ -147,10 +147,10 @@ export abstract class Collector<Collected, Events extends CollectorEvents<Collec
             this._timeout = setTimeout(() => this.stop('time'), options.time ?? this.time).unref();
         }
 
-        if (this._idleTimeout) this.resetIDle(options.idle);
+        if (this._idleTimeout) this.resetIdle(options.idle);
     }
 
-    public resetIDle(idle?: number): void {
+    public resetIdle(idle?: number): void {
         if (!this._idleTimeout) return;
 
         clearTimeout(this._idleTimeout);
