@@ -12,6 +12,7 @@ export interface CollectedMessageReaction {
     channel?: Uncached|AnyTextChannelWithoutGroup;
     guildID?: string|null;
     guild?: Uncached|Guild|null;
+    lastReactor?: Uncached|User|Member;
 }
 
 export interface ReactionCollectorOptions extends CollectorOptions<CollectedMessageReaction> {
@@ -147,7 +148,8 @@ export class ReactionCollector extends Collector<CollectedMessageReaction, React
             channelID: message.channelID,
             channel: message.channel,
             guildID: message.guildID,
-            guild: message.guild
+            guild: message.guild,
+            lastReactor: reactor
         };
     }
 
