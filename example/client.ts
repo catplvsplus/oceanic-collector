@@ -73,8 +73,6 @@ client.on('messageCreate', async (message) => {
             client
         });
 
-        console.log(collector);
-
         collector.on('collect', (reaction) => {
             console.log(`Collected reaction: ${reaction.emoji.name} from user: ${reaction.lastReactorUser?.username || reaction.lastReactorUserID}`);
         });
