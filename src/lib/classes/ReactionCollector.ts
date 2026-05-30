@@ -42,8 +42,13 @@ export class ReactionCollector extends Collector<MessageReaction, ReactionCollec
     constructor(public readonly options: ReactionCollectorOptions) {
         super(options);
 
+        this._onMessageDelete = this._onMessageDelete.bind(this);
+        this._onMessageDeleteBulk = this._onMessageDeleteBulk.bind(this);
+        this._onChannelDelete = this._onChannelDelete.bind(this);
+        this._onThreadDelete = this._onThreadDelete.bind(this);
+        this._onGuildDelete = this._onGuildDelete.bind(this);
+
         this.message = options.message ?? null;
-        this.channel = options.channel
             ? options.channel
             : this.message
                 ? this.message.channel ?? null
