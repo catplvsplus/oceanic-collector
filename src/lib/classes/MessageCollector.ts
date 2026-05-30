@@ -77,15 +77,21 @@ export class MessageCollector extends Collector<Message> {
     }
 
     protected _onChannelDelete(channel: AnyGuildChannelWithoutThreads|PrivateChannel|DeletedPrivateChannel): void {
-        if (!this.channel || this.channel.id !== channel.id) return;
-        if (
-            this.channel.type !== ChannelTypes.PUBLIC_THREAD &&
-            this.channel.type !== ChannelTypes.PRIVATE_THREAD &&
-            this.channel.type !== ChannelTypes.ANNOUNCEMENT_THREAD ||
-            this.channel.parentID !== channel.id
-        ) return;
+        if (!this.channel) return;
 
-        this.stop('channel deleted');
+        if (this.channel.id === channel.id) {
+            this.stop('channel deleted');
+            return;
+        }
+
+        if (
+            (this.channel.type === ChannelTypes.PUBLIC_THREAD ||
+                this.channel.type === ChannelTypes.PRIVATE_THREAD ||
+                this.channel.type === ChannelTypes.ANNOUNCEMENT_THREAD) &&
+            this.channel.parentID === channel.id
+        ) {
+            this.stop('channel deleted');
+        }
     }
 
     protected _onThreadDelete(channel: PossiblyUncachedThread): void {
