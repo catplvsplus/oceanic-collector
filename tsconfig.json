@@ -1,17 +1,18 @@
 {
-  "compilerOptions": {
-    "rootDir": "./src",
-    "outDir": "./dist",
-    "target": "ESNext",
-    "module": "NodeNext",
-    "moduleResolution": "NodeNext",
-    "forceConsistentCasingInFileNames": true,
-    "declaration": true,
-    "experimentalDecorators": true,
-    "esModuleInterop": true,
-    "skipLibCheck": true,
-    "sourceMap": true,
-    "strict": true,
-    "newLine": "lf"
-  }
+    "include": ["./src/**/*"],
+    "exclude": ["./tsdown.config.ts"],
+    "compilerOptions": {
+        "target": "ESNext",
+        "module": "NodeNext",
+        "moduleResolution": "NodeNext",
+        "forceConsistentCasingInFileNames": true,
+        "experimentalDecorators": true,
+        "esModuleInterop": true,
+        "skipLibCheck": true,
+        "sourceMap": true,
+        "strict": true,
+        "newLine": "lf",
+        "verbatimModuleSyntax": true,
+        "types": ["node"]
+    }
 }

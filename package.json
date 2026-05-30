@@ -1,20 +1,26 @@
 {
   "name": "oceanic-collector",
   "description": "A collection of Oceanic.js collectors",
-  "version": "1.0.3",
-  "license": "GPL-3.0",
-  "main": "./dist/index.js",
+  "version": "2.0.0",
+  "license": "MIT",
+  "type": "module",
+  "main": "./dist/index.cjs",
   "module": "./dist/index.mjs",
-  "types": "./dist/index.d.ts",
+  "types": "./dist/index.d.cts",
   "exports": {
     ".": {
-      "import": "./dist/index.mjs",
-      "require": "./dist/index.js",
-      "types": "./dist/index.d.ts"
+      "import": {
+        "types": "./dist/index.d.mts",
+        "default": "./dist/index.mjs"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
     }
   },
   "repository": {
-    "url": "https://github.com/NotGhex/oceanic-collector",
+    "url": "https://github.com/catplvsplus/oceanic-collector",
     "type": "git"
   },
   "files": [
@@ -22,20 +28,21 @@
     "LICENSE"
   ],
   "scripts": {
-    "clean": "npx rimraf dist",
-    "build": "npm run clean && npx tsc"
-  },
-  "devDependencies": {
-    "@types/node": "^18.15.3",
-    "dotenv": "^16.0.3",
-    "oceanic.js": "^1.5.1",
-    "rimraf": "^4.4.0",
-    "typescript": "^5.0.2"
+    "build": "tsdown --config-loader unrun",
+    "check": "tsc --noEmit"
   },
   "peerDependencies": {
-    "oceanic.js": "^1.5.1"
+    "oceanic.js": "^1.14.0"
   },
   "dependencies": {
-    "@discordjs/collection": "^1.4.0"
+    "@discordjs/collection": "^2.1.1",
+    "@vladfrangu/async_event_emitter": "^2.4.7"
+  },
+  "devDependencies": {
+    "@dotenvx/dotenvx": "^1.69.2",
+    "@types/node": "^25.9.1",
+    "tsdown": "^0.22.1",
+    "typescript": "^6.0.3",
+    "unrun": "^0.3.0"
   }
 }
