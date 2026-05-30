@@ -78,6 +78,7 @@ export abstract class Collector<T, E extends CollectorEvents<T> = CollectorEvent
                 clean();
                 res(value);
             }
+
             const onEnd = (collected: ReadonlyCollection<string, T>, reason: string) => {
                 clean();
                 rej(new Error(`Collector ended with reason: ${reason}`));

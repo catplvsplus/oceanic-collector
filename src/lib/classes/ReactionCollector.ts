@@ -49,6 +49,7 @@ export class ReactionCollector extends Collector<MessageReaction, ReactionCollec
         this._onGuildDelete = this._onGuildDelete.bind(this);
 
         this.message = options.message ?? null;
+        this.channel = options.channel
             ? options.channel
             : this.message
                 ? this.message.channel ?? null
@@ -182,20 +183,16 @@ export class ReactionCollector extends Collector<MessageReaction, ReactionCollec
 
     protected _onChannelDelete(channel: AnyGuildChannelWithoutThreads|PrivateChannel|DeletedPrivateChannel): void {
         if (!this.channel) return;
-
-        if (this.channel.id === channel.id) {
-            this.stop('channel deleted');
-            return;
-        }
-
         if (
-            (this.channel.type === ChannelTypes.PUBLIC_THREAD ||
+            this.channel.id !== channel.id &&
+            (
                 this.channel.type === ChannelTypes.PRIVATE_THREAD ||
-                this.channel.type === ChannelTypes.ANNOUNCEMENT_THREAD) &&
-            this.channel.parentID === channel.id
-        ) {
-            this.stop('channel deleted');
-        }
+                this.channel.type === ChannelTypes.PUBLIC_THREAD ||
+                this.channel.type === ChannelTypes.ANNOUNCEMENT_THREAD
+            ) && this.channel.parentID !== channel.id
+        ) return;
+
+        this.stop('channel deleted');
     }
 
     protected _onThreadDelete(channel: PossiblyUncachedThread): void {
