@@ -7,7 +7,6 @@ export interface InteractionCollectorOptions<T extends AnyInteractionGateway> ex
     message?: Message;
     channel?: AnyTextableChannel;
     guild?: Guild|Uncached;
-    interactionTypes?: T['type'][];
     maxUsers?: number;
 }
 

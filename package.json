@@ -39,6 +39,7 @@
     "@vladfrangu/async_event_emitter": "^2.4.7"
   },
   "devDependencies": {
+    "@dotenvx/dotenvx": "^1.69.2",
     "@types/node": "^25.9.1",
     "tsdown": "^0.22.1",
     "typescript": "^6.0.3",

@@ -4,7 +4,8 @@ import { Collection } from '@discordjs/collection';
 
 export interface MessageReaction extends EventReaction {
     id: string;
-    lastReactorUser: Uncached|User|Member;
+    lastReactorUserID: string;
+    lastReactorUser: User|Member|null;
     messageID: string;
     message: PossiblyUncachedMessage;
     channelID: string;
@@ -130,6 +131,18 @@ export class ReactionCollector extends Collector<MessageReaction, ReactionCollec
         return true;
     }
 
+    public isEnded(): boolean {
+        if (this.options.maxEmojis && this.collected.size >= this.options.maxEmojis) {
+            return true;
+        }
+
+        if (this.options.maxUsers && this.users.size >= this.options.maxUsers) {
+            return true;
+        }
+
+        return super.isEnded();
+    }
+
     public async onDispose(message: PossiblyUncachedMessage, reactor: Uncached|User|Member, reaction: EventReaction): Promise<boolean> {
         const isRelevent = await super.onDispose(message, reactor, reaction);
         if (!isRelevent) return isRelevent;
@@ -185,7 +198,8 @@ export class ReactionCollector extends Collector<MessageReaction, ReactionCollec
     public getMessageReaction(message: PossiblyUncachedMessage, reactor: Uncached|User|Member, reaction: EventReaction): MessageReaction {
         return {
             id: ReactionCollector.getEmojiID(reaction),
-            lastReactorUser: reactor,
+            lastReactorUserID: reactor.id,
+            lastReactorUser: 'username' in reactor ? reactor : null,
             messageID: message.id,
             message,
             channelID: message.channelID,
