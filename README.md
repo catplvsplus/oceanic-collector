@@ -1,105 +1,74 @@
 # Oceanic Collector
-A collection of oceanic collectors
+A collection of oceanic.js collectors
 
-- [Collector Usage](#collector-usage)
-- [Awaiter Usage](#awaiter-usage)
-
-> See also [eris-collectors](https://www.npmjs.com/package/eris-collectors)
-
-```
-npm i oceanic-collector
-yarn add oceanic-collector
-pnpm add oceanic-collector
+## Installation
+```bash
+npm install oceanic-collector
 ```
 
-## Collector Usage
-
-```js
-const { MessageCollector } = require('oceanic-collector');
-
-const collector = new MessageCollector({
-    client: bot,                            // [Required] Your bot client
-    channel: channel,                       // [Required] Any text channel
-    time: 1000 * 60,                        // [Optional] Collector timeout in milliseconds
-    max: 10,                                // [Optional] Max collected messages
-    filter: message => !message.author.bot, // [Optional] Custom collector filter
-});
-
-collector.on('collect', message => {}); // Emitted when the collector collects a message
-collector.on('end', reason => {});      // Emitted when the collector stopped
-
-collector.stop();                       // Stop collecting messages
-```
-
-```js
-const { ReactionCollector } = require('oceanic-collector');
-
-const collector = new ReactionCollector({
-    client: bot,                            // [Required] Your bot client
-    message: message,                       // [Required] A message to collect reactions from
-    time: 1000 * 60,                        // [Optional] Collector timeout in milliseconds
-    max: 10,                                // [Optional] Max collected reactions
-    maxEmojis: 10,                          // [Optional] Max collected emoji
-    maxReactors: 10,                        // [Optional] Max reactors
-    filter: reaction => true,               // [Optional] custom collector filter
-});
-
-collector.on('collect', reaction => {}); // Emitted when the collector collects a reaction
-collector.on('end', reason => {});       // Emitted when the collector stopped
-
-collector.stop();                        // Stop collecting reactions
-```
-
-```js
-const { InteractionCollector } = require('oceanic-collector');
-const { InteractionTypes } = require('oceanic.js');
+## Usage
+### InteractionCollector
+```ts
+import { InteractionCollector } from 'oceanic-collector';
 
 const collector = new InteractionCollector({
-    client: bot,                                         // [Required] Your bot client
-    message: message,                                    // [Optional] A message to collect interactions from
-    channel: channel,                                    // [Optional] Collects interactions in a channel
-    guild: guild,                                        // [Optional] Collects interactions from a guild
-    interactionType: InteractionTypes.MESSAGE_COMPONENT, // [Optional] Sets the interaction type to collect
-    maxUsers: maxUsers,                                  // [Optional] Set max users to interact to this collector
-    time: 1000 * 60,                                     // [Optional] Collector timeout in milliseconds
-    max: 10,                                             // [Optional] Max collected reactions
-    filter: interaction => true,                         // [Optional] custom collector filter
+    client,                                      // Your oceanic.js client instance (required)
+    time: 60000,                                 // Collect interactions for 60 seconds
+    idle: 30000,                                 // End the collector if it becomes idle for 30 seconds
+    max: 10,                                     // Collect a maximum of 10 interactions
+    maxUsers: 5,                                 // Collect interactions from a maximum of 5 users
+    types: [InteractionTypes.MESSAGE_COMPONENT], // Only collect a specific type of interaction
+    filter: i => i.user.id === '1234567890',     // Only collect interactions from a specific user
+    message: '1234567890',                       // Only collect interactions from a specific message
+    channel: '1234567890',                       // Only collect interactions from a specific channel
+    guild: '1234567890',                         // Only collect interactions from a specific guild
 });
 
-collector.on('collect', interaction => {}); // Emitted when the collector collects an interaction
-collector.on('end', reason => {});          // Emitted when the collector stopped
+collector.on('collect', interaction => {});      // Handle collected interactions
+collector.on('end', (collected, reason) => {});  // Handle the end of the collection
 
-collector.stop();                           // Stop collecting interactions
+collector.stop();                                // Stop the collector
 ```
 
-## Awaiter Usage
+### MessageCollector
+```ts
+import { MessageCollector } from 'oceanic-collector';
 
-```js
-const { awaitMessage } = require('oceanic-collector');
+const collector = new MessageCollector({
+    client,                                        // Your oceanic.js client instance (required)
+    time: 60000,                                   // Collect messages for 60 seconds
+    idle: 30000,                                   // End the collector if it becomes idle for 30 seconds
+    max: 10,                                       // Collect a maximum of 10 messages
+    filter: msg => msg.author.id === '1234567890', // Only collect messages from a specific user
+    channel: '1234567890',                         // Only collect messages from a specific channel
+    guild: '1234567890',                           // Only collect messages from a specific guild
+});
 
-// Single message
-const message = await awaitMessage({ client, channel });
+collector.on('collect', message => {});            // Handle collected messages
+collector.on('end', (collected, reason) => {});    // Handle the end of the collection
 
-// Multiple messages
-const messages = await awaitMessage({ client, channel, max: 0 });
+collector.stop();                                  // Stop the collector
 ```
 
-```js
-const { awaitInteraction } = require('oceanic-collector');
+### ReactionCollector
+```ts
+import { ReactionCollector } from 'oceanic-collector';
 
-// Single interaction
-const interaction = await awaitInteraction({ client, channel });
+const collector = new ReactionCollector({
+    client,                                               // Your oceanic.js client instance (required)
+    time: 60000,                                          // Collect reactions for 60 seconds
+    idle: 30000,                                          // End the collector if it becomes idle for 30 seconds
+    max: 10,                                              // Collect a maximum of 10 reactions
+    maxEmojis: 5,                                         // Collect a maximum of 5 different emojis
+    maxUsers: 3,                                          // Collect reactions from a maximum of 3 users
+    filter: (reaction, user) => user.id === '1234567890', // Only collect reactions from a specific user
+    message: '1234567890',                                // Only collect reactions from a specific message
+    channel: '1234567890',                                // Only collect reactions from a specific channel
+    guild: '1234567890',                                  // Only collect reactions from a specific guild
+});
 
-// Multiple interactions
-const interactions = await awaitInteraction({ client, channel, max: 0 });
-```
+collector.on('collect', reaction => {});                  // Handle collected reactions
+collector.on('end', (collected, reason) => {});           // Handle the end of the collection
 
-```js
-const { awaitReaction } = require('oceanic-collector');
-
-// Single reaction
-const reaction = await awaitReaction({ client, channel });
-
-// Multiple reactions
-const reactions = await awaitReaction({ client, channel, max: 0 });
+collector.stop();                                         // Stop the collector
 ```
