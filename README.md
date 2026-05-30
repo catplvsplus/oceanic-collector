@@ -19,9 +19,9 @@ const collector = new InteractionCollector({
     maxUsers: 5,                                 // Collect interactions from a maximum of 5 users
     types: [InteractionTypes.MESSAGE_COMPONENT], // Only collect a specific type of interaction
     filter: i => i.user.id === '1234567890',     // Only collect interactions from a specific user
-    message: '1234567890',                       // Only collect interactions from a specific message
-    channel: '1234567890',                       // Only collect interactions from a specific channel
-    guild: '1234567890',                         // Only collect interactions from a specific guild
+    message,                                     // Only collect interactions from a specific message
+    channel,                                     // Only collect interactions from a specific channel
+    guild,                                       // Only collect interactions from a specific guild
 });
 
 collector.on('collect', interaction => {});      // Handle collected interactions
@@ -40,8 +40,8 @@ const collector = new MessageCollector({
     idle: 30000,                                   // End the collector if it becomes idle for 30 seconds
     max: 10,                                       // Collect a maximum of 10 messages
     filter: msg => msg.author.id === '1234567890', // Only collect messages from a specific user
-    channel: '1234567890',                         // Only collect messages from a specific channel
-    guild: '1234567890',                           // Only collect messages from a specific guild
+    channel,                                       // Only collect messages from a specific channel
+    guild,                                         // Only collect messages from a specific guild
 });
 
 collector.on('collect', message => {});            // Handle collected messages
@@ -62,9 +62,9 @@ const collector = new ReactionCollector({
     maxEmojis: 5,                                         // Collect a maximum of 5 different emojis
     maxUsers: 3,                                          // Collect reactions from a maximum of 3 users
     filter: (reaction, user) => user.id === '1234567890', // Only collect reactions from a specific user
-    message: '1234567890',                                // Only collect reactions from a specific message
-    channel: '1234567890',                                // Only collect reactions from a specific channel
-    guild: '1234567890',                                  // Only collect reactions from a specific guild
+    message,                                              // Only collect reactions from a specific message
+    channel,                                              // Only collect reactions from a specific channel
+    guild,                                                // Only collect reactions from a specific guild
 });
 
 collector.on('collect', reaction => {});                  // Handle collected reactions
