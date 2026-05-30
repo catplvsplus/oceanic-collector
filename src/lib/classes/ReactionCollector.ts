@@ -138,11 +138,13 @@ export class ReactionCollector extends Collector<MessageReaction, ReactionCollec
 
     public isEnded(): boolean {
         if (this.options.maxEmojis && this.collected.size >= this.options.maxEmojis) {
-            return true;
+            this.stop('emoji limit');
+            return this.ended;
         }
 
         if (this.options.maxUsers && this.users.size >= this.options.maxUsers) {
-            return true;
+            this.stop('user limit');
+            return this.ended;
         }
 
         return super.isEnded();
